@@ -1,19 +1,20 @@
 import "./App.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import { useQuery } from "react-query";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-
   const getDataFromUrl = () => {
     const res = axios
       .get("https://api.imgflip.com/get_memes")
       .then((res) => res.data.data.memes);
     return res;
   };
-  const { data, isLoading } = useQuery("gallery", getDataFromUrl);
+  const { data, isLoading, refetch } = useQuery("gallery", getDataFromUrl, {
+    cacheTime: Infinity,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   const renderMemes = () => {
     let items = data.map((post, index) => {
@@ -33,10 +34,8 @@ function App() {
     return items;
   };
   const handleClick = () => {
-    // setLoading(!loading);
-    console.log("click");
+    refetch();
   };
-
   return (
     <>
       <div className="d-flex justify-content-center">
@@ -44,11 +43,10 @@ function App() {
           Load memes
         </Button>
       </div>
-      <div></div>
       <div className="d-flex justify-content-center">
         <Container>
           <Row xs={1} md={4}>
-            {!isLoading ? renderMemes() : <div></div>}
+            {!isLoading ? renderMemes() : null}
           </Row>
         </Container>
       </div>
