@@ -31,7 +31,13 @@ function App() {
         </Col>
       );
     });
-    return items;
+    return (
+      <Container>
+        <Row xs={1} md={4}>
+          {items}
+        </Row>
+      </Container>
+    );
   };
   const handleClick = () => {
     refetch();
@@ -40,15 +46,11 @@ function App() {
     <>
       <div className="d-flex justify-content-center">
         <Button className="primary btn-md px-5 my-3 mx-3" onClick={handleClick}>
-          Load memes
+          Refetch memes
         </Button>
       </div>
       <div className="d-flex justify-content-center">
-        <Container>
-          <Row xs={1} md={4}>
-            {!isLoading ? renderMemes() : null}
-          </Row>
-        </Container>
+        {!isLoading ? renderMemes() : null}
       </div>
     </>
   );
